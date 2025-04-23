@@ -217,7 +217,7 @@ def spawnPickups(app):
             localX_s = random.randint(50, app.sectionLength - 50)
         worldX_s = section_s * app.sectionLength + localX_s
         maxSkyY = min(app.height // 2 - 50, groundY - 20)
-        sy_s = random.randint(20, max(20, maxSkyY))
+        sy_s = random.randint(75, max(20, maxSkyY))
         app.pickups.append({
             'word': word,
             'worldX': worldX_s,
@@ -233,6 +233,9 @@ def onAppStart(app):
     app.birdIndex = 0
     app.turtleIndex = 0
     app.deerIndex = 0
+
+    app.backgroundMusic = Sound('../assets/music.mp3')
+    app.backgroundMusic.play(loop=True)
     app.birdURL = [f'../assets/bird/Bird{i}.png' for i in range(1, 6)]
     app.birdImages = [CMUImage(Image.open(url)) for url in app.birdURL]
 
@@ -439,8 +442,8 @@ def drawMessages(app):
 
 def drawAnimalButtons(app):
     for animal, (bx, by) in app.buttonPositions.items():
-        drawRect(bx, by, 80, 40, fill='white', border='black', opacity = 50)
-        drawLabel(animal.capitalize(), bx+40, by+20, size=14)
+        drawRect(bx, by+40, 80, 40, fill='white', border='black', opacity = 50)
+        drawLabel(animal.capitalize(), bx+40, by+60, size=14)
 
 
 def drawIntroScreen(app):
@@ -637,7 +640,7 @@ def onKeyPress(app, key):
 def onMousePress(app, mouseX, mouseY):
     if app.state == "travel":
         for animal, (bx, by) in app.buttonPositions.items():
-            if bx <= mouseX <= bx + 80 and by <= mouseY <= by + 40:
+            if bx <= mouseX <= bx + 80 and by+40 <= mouseY <= by + 80:
                 # picking up or dropping a word
                 if app.collectedSegments:
                     app.collectedSegments.pop()
