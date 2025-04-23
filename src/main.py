@@ -296,9 +296,11 @@ def onAppStart(app):
             "title": "Choosing Your Animal",
             "lines": [
                 "During each section, smartly pick bird, turtle, or deer.",
-                "Birds fly over cliffs and mountains but struggle on the lakes.",
-                "Turtles swim through water but move slowly on land.",
-                "Deer runs very fast on the flat ground."
+                "Birds fly over cliffs and mountains but costs a lot spirit.",
+                "Turtles swim through water but move slowly on land",
+                "and costs a lot spirit when climbing",
+                "Deer runs very fast on the flat ground",
+                "and costs a lot spirit when climbing"
             ]
         },
         {
@@ -306,14 +308,14 @@ def onAppStart(app):
             "lines": [
                 "Each animal switch costs one words.",
                 "Lost words can be possibly picked up",
-                "Move close to a work and it joins your “Carrying” bar.",
-                "Ground animals ignore sky-high words, only birds can reach them."
+                "Move close to a word and it joins your “Carrying” words list.",
+                "Ground animals can not take sky-high words, only birds can reach them."
             ]
         },
         {
             "title": "Building & Delivering",
             "lines": [
-                "The top bar shows words you’ve picked up, in order.",
+                "The top “Carrying” bar shows words you’ve picked up, in order.",
                 "You must collect words in the exact sequence of the goal phrase.",
                 "Delivering the wrong message affects your success as a messenger.",
                 "Once you’ve delivered the correct gaol message, you win!"
@@ -614,7 +616,11 @@ def drawWinScreen(app):
 
 
 def onKeyPress(app, key):
-    if key.lower() == 'r' and app.state in ('gameover','win'):
+    if key.lower() == 'r' and app.state == 'gameover':
+        restartGame(app)
+        return
+    if key.lower() == 'r' and app.state == 'win':
+        app.sectionIndex = 0
         restartGame(app)
         return
 
