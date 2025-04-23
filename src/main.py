@@ -736,7 +736,6 @@ def onKeyHold(app, keys):
                     break
             if not collision and app.animalChoice == 'bird':
                 if abs(app.animalY - getEffectiveGround(app, app.animalX + app.mapOffset)) < 20:
-                    print(app.animalY)
                     app.animalY -= 25
                 else:
                     app.animalY = newY
@@ -867,7 +866,6 @@ def onKeyHold(app, keys):
 def onStep(app):
     #handle falling (turtle/deer)
     if app.state == 'falling':
-        print("dsad")
         # gravity
         app.animalY = min(app.animalY + app.fallSpeed, app.fallTargetY)
         # As soon as  land, game over
@@ -879,7 +877,6 @@ def onStep(app):
     #check if scrolled past the end of the current section
     if app.state == "travel":
         boundaryX = (app.sectionIndex + 1) * app.sectionLength + 50
-        print(app.mapOffset)
         if app.mapOffset > boundaryX:
             # advance section
             app.sectionIndex += 1
