@@ -114,18 +114,6 @@ def getEffectiveGround(app, worldX):
     return clamp(effective, 0, app.height - 20)
 
 
-def drawIntroScreen(app):
-    page = app.introPages[app.introIndex]
-    drawRect(0, 0, app.width, app.height, fill='darkSlateBlue')
-    drawLabel(page["title"], app.width/2, app.height/3,
-              size=32, bold=True, fill='gold')
-    for i, line in enumerate(page["lines"]):
-        drawLabel(line, app.width/2, app.height/2 + i*30,
-                  size=18, fill='white')
-    drawLabel("Press any key →", app.width - 100, app.height - 40,
-              size=14, fill='lightGray')
-
-
 def drawGround(app):
     for screenX in range(0, app.width, 20):
         worldX = screenX + app.mapOffset
@@ -245,30 +233,36 @@ def onAppStart(app):
     app.birdIndex = 0
     app.turtleIndex = 0
     app.deerIndex = 0
-    app.birdURL = [f'./assets/bird/Bird{i}.png' for i in range(1, 6)]
+    app.birdURL = [f'../assets/bird/Bird{i}.png' for i in range(1, 6)]
     app.birdImages = [CMUImage(Image.open(url)) for url in app.birdURL]
 
-    app.turtleURL = [f'./assets/turtle/walking/Turtle{i}.png' for i in range(1, 5)]
+    app.mapBackground = CMUImage(Image.open('../assets/background/map.png'))
+    app.introBackground = CMUImage(Image.open('../assets/background/intro.png'))
+    app.intro0Background = CMUImage(Image.open('../assets/background/intro0.png'))
+    app.intro1Background = CMUImage(Image.open('../assets/background/intro1.png'))
+    app.failBackground = CMUImage(Image.open('../assets/background/fail.png'))
+
+    app.turtleURL = [f'../assets/turtle/walking/Turtle{i}.png' for i in range(1, 5)]
     app.turtleImages = [CMUImage(Image.open(url)) for url in app.turtleURL]
 
-    app.deerURL = [f'./assets/deer/Deer{i}.png' for i in range(1, 6)]
+    app.deerURL = [f'../assets/deer/Deer{i}.png' for i in range(1, 6)]
     app.deerImages = [CMUImage(Image.open(url)) for url in app.deerURL]
 
-    app.mountainImages = [CMUImage(Image.open('./assets/Mountain1.png')),
-                          CMUImage(Image.open('./assets/Mountain2.png'))]
-    app.cliffImages = [CMUImage(Image.open('./assets/cliff1.png')),
-                       CMUImage(Image.open('./assets/cliff2.png')),
-                       CMUImage(Image.open('./assets/cliff3.png')),
-                       CMUImage(Image.open('./assets/cliff4.png')),
-                       CMUImage(Image.open('./assets/cliff5.png')),
-                       CMUImage(Image.open('./assets/cliff6.png')),
-                       CMUImage(Image.open('./assets/cliff7.png')),
-                       CMUImage(Image.open('./assets/cliff8.png')),
-                       CMUImage(Image.open('./assets/cliff9.png'))]
-    app.groundImages = [CMUImage(Image.open('./assets/grass1.png')),
-                        CMUImage(Image.open('./assets/dirt.png'))]
-    app.waterImages = [CMUImage(Image.open('./assets/water1.png')),
-                       CMUImage(Image.open('./assets/water2.png'))]
+    app.mountainImages = [CMUImage(Image.open('../assets/Mountain1.png')),
+                          CMUImage(Image.open('../assets/Mountain2.png'))]
+    app.cliffImages = [CMUImage(Image.open('../assets/cliff1.png')),
+                       CMUImage(Image.open('../assets/cliff2.png')),
+                       CMUImage(Image.open('../assets/cliff3.png')),
+                       CMUImage(Image.open('../assets/cliff4.png')),
+                       CMUImage(Image.open('../assets/cliff5.png')),
+                       CMUImage(Image.open('../assets/cliff6.png')),
+                       CMUImage(Image.open('../assets/cliff7.png')),
+                       CMUImage(Image.open('../assets/cliff8.png')),
+                       CMUImage(Image.open('../assets/cliff9.png'))]
+    app.groundImages = [CMUImage(Image.open('../assets/grass1.png')),
+                        CMUImage(Image.open('../assets/dirt.png'))]
+    app.waterImages = [CMUImage(Image.open('../assets/water1.png')),
+                       CMUImage(Image.open('../assets/water2.png'))]
     app.introPages = [
         {
             "title": "The Bronze Age Shang",
@@ -310,7 +304,7 @@ def onAppStart(app):
                 "Each animal switch costs one words.",
                 "Lost words can be possibly picked up",
                 "Move close to a work and it joins your “Carrying” bar.",
-                "Ground animals ignore sky‑high words, only birds can reach them."
+                "Ground animals ignore sky-high words, only birds can reach them."
             ]
         },
         {
@@ -429,13 +423,13 @@ def onAppStart(app):
 
 def drawSpirit(app):
     spirit = pythonRound(app.spirit,2)
-    drawLabel(f"Spirit: {spirit}", 60, 20, size=16, bold=True)
+    drawLabel(f"Spirit: {spirit}", 48, 42, size=14, bold=True)
     maxSpirit = 100
     barWidth = 100
     currentWidth = int((app.spirit/maxSpirit) * barWidth)
     if currentWidth > 1:
-        drawRect(20, 40, currentWidth, 10, fill='blue')
-    drawRect(20, 40, barWidth, 10, fill=None, border='black')
+        drawRect(20, 56, currentWidth, 6.5, fill='blue')
+    drawRect(20, 56, barWidth, 6.5, fill=None, border='black')
 
 def drawMessages(app):
     carrying = " ".join(app.collectedSegments)
@@ -448,39 +442,95 @@ def drawAnimalButtons(app):
         drawRect(bx, by, 80, 40, fill='white', border='black', opacity = 50)
         drawLabel(animal.capitalize(), bx+40, by+20, size=14)
 
+
+def drawIntroScreen(app):
+    page = app.introPages[app.introIndex]
+    drawImage(app.intro0Background, 0, 0,
+              align='top-left', width=600, height=400)
+    drawRect(0, 0, app.width, app.height, fill='black', opacity=46)
+    drawLabel(page["title"], app.width/2, app.height/3,
+              size=32, bold=True, fill='gold')
+    for i, line in enumerate(page["lines"]):
+        drawLabel(line, app.width/2, app.height/2 + i*30,
+                  size=18, fill='white')
+    drawLabel("Press any key →", app.width - 100, app.height - 40,
+              size=14, fill='lightGray')
+
 def drawStartScreen(app):
-    drawRect(0, 0, app.width, app.height, fill='lightBlue')
+    drawImage(app.introBackground, 0, 0,
+              align='top-left', width=600, height=400)
+    drawRect(0, 0, app.width, app.height, fill='white', opacity=36)
     drawLabel("Shang Dynasty: Spirit Messenger", app.width / 2, app.height / 3, size=28, bold=True)
     drawLabel("Press any key to start", app.width / 2, app.height / 2, size=18)
 
+
 def drawOverviewScreen(app):
     section = app.sections[app.sectionIndex]
-    drawRect(0, 0, app.width, app.height, fill='lightYellow')
+    drawImage(app.intro1Background, 0, 0,
+              align='top-left', width=600, height=400)
+    drawRect(0, 0, app.width, app.height, fill='white', opacity=36)
     drawLabel("Upcoming Section Overview", app.width / 2, 40, size=24, bold=True)
-    overviewText = f"Mountains: {section.get('mountain', 0)}    " \
-                   f"Lakes: {section.get('lake', 0)}    " \
-                   f"Cliffs: {section.get('cliff', 0)}"
-    drawLabel(overviewText, app.width / 2, 80, size=18)
-    drawLabel("Press any key to choose your animal", app.width / 2, app.height - 40, size=16)
+
+    counts = {
+        'Mountains': section.get('mountain', 0),
+        'Lakes': section.get('lake', 0),
+        'Cliffs': section.get('cliff', 0)
+    }
+    total = sum(counts.values()) or 1
+
+    # Draw bars
+    barX, barY = app.width / 2 - 235, 100
+    barWidth, barHeight = 260, 20
+    for i, (label, count) in enumerate(counts.items()):
+        pct = count / total
+        y = barY + i * 60
+        drawLabel(f"{label}", barX, y, size=18, align='left', bold = True)
+        # outline
+        drawRect(barX + 120, y - barHeight / 2, barWidth, barHeight, fill='sandyBrown')
+        # filled portion
+        drawRect(barX + 120, y - barHeight / 2, barWidth * pct, barHeight, fill='saddleBrown')
+        drawLabel(f"{pct * 100:.0f}%", barX + 120 + barWidth + 10, y, size=14, align='left')
+
+    drawLabel("Press any key to choose your animal",
+              app.width / 2, app.height - 40, size=16)
 
 
 def drawChooseScreen(app):
     section = app.sections[app.sectionIndex]
-    drawRect(0, 0, app.width, app.height, fill='lightGreen')
+    drawImage(app.intro1Background, 0, 0,
+              align='top-left', width=600, height=400)
+    drawRect(0, 0, app.width, app.height, fill='white', opacity=36)
     drawLabel("Choose Your Animal", app.width / 2, 40, size=24, bold=True)
-    overviewText = f"Mountains: {section.get('mountain', 0)}    " \
-                   f"Lakes: {section.get('lake', 0)}    " \
-                   f"Cliffs: {section.get('cliff', 0)}"
-    drawLabel(overviewText, app.width / 2, 80, size=18)
+
+    counts = {
+        'Mountains': section.get('mountain', 0),
+        'Lakes': section.get('lake', 0),
+        'Cliffs': section.get('cliff', 0)
+    }
+    total = sum(counts.values()) or 1
+
+    # Draw bars
+    barX, barY = app.width / 2 - 235, 100
+    barWidth, barHeight = 260, 20
+    for i, (label, count) in enumerate(counts.items()):
+        pct = count / total
+        y = barY + i * 60
+        drawLabel(f"{label}", barX, y, size=18, align='left', bold = True)
+        drawRect(barX + 120, y - barHeight / 2, barWidth, barHeight, fill='sandyBrown')
+        drawRect(barX + 120, y - barHeight / 2, barWidth * pct, barHeight, fill='saddleBrown')
+        drawLabel(f"{pct * 100:.0f}%", barX + 120 + barWidth + 10, y, size=14, align='left')
+
     for animal, pos in app.buttonPositions.items():
         x, y = pos
-        drawRect(x, y, 100, 50, fill='white', border='black')
+        drawRect(x, y, 100, 50, fill='white', border='black', opacity=46)
         drawLabel(animal.capitalize(), x + 50, y + 25, size=16)
 
 
 def drawTravelScreen(app):
     # clear background
-    drawRect(0, 0, app.width, app.height, fill='skyBlue')
+    drawImage(app.mapBackground, 0, 0,
+              align='top-left', width=600, height=400)
+    drawRect(0, 0, app.width, app.height, fill='white', opacity=36)
 
     drawRect(app.width - 110, 0, 110, 30, fill='white', opacity=50)
     drawLabel(f"Section {app.sectionIndex+1}/{len(app.sections)}",
@@ -525,7 +575,9 @@ def drawTravelScreen(app):
 
 
 def drawGameOverScreen(app):
-    drawRect(0, 0, app.width, app.height, fill='red')
+    drawImage(app.failBackground, 0, 0,
+              align='top-left', width=600, height=400)
+    drawRect(0, 0, app.width, app.height, fill='white', opacity=26)
     drawLabel("Game Over!", app.width / 2, app.height / 2, size=32, bold=True)
     drawLabel("Press R to restart", app.width / 2, app.height / 2 + 40, size=20)
 

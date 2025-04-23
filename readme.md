@@ -1,7 +1,6 @@
 # Welcome to Shang Dynasty: Spirit Messenger!
 
 ![](https://tokei.rs/b1/github/leoliu012/Shang-Dynasty-Spirit-Messenger)
-
 ## Description: 
 **Shang Dynasty: Spirit Messenger** is a side-scrolling adventure that immerses you in Bronze-Age China 
 as a sacred courier. Navigate randomized mountains, lakes, and cliffs by choosing between a nimble bird, 
